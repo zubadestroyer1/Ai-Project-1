@@ -44,8 +44,6 @@ def calculate_cosine_similarity(sentence1: str, sentence2: str) -> float:
 
     return similarity
 
-
-
 # FRONTEND
 user_question = st.text_input('Enter a question:', 'Ask a question about pink river dolphins.')
 df = pd.read_csv("question_answer_data_set_list.csv")
