@@ -53,7 +53,7 @@ context = df['answers'].iloc[0:3]
 st.dataframe(df)
 #prompt enginee
 engineered_prompt = f"""
-    Based on the context: {context}, answer the following question: {user_quesstion} with correct grammar and sentence structure.
+    Based on the context: {context}, answer the following question: {user_question} with correct grammar and sentence structure.
 """
 answer = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
 st.write('Answer', answer)
