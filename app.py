@@ -71,7 +71,7 @@ user_question = st.text_input('Enter a question:', 'Ask a question about pink ri
 df = pd.read_csv("question_answer_data_set_list.csv")
 df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], user_question, palm_api_key), axis = 1)
 df = df.sort_values(by='similarity', ascending=False)
-context = df['answers'].iloc[0:3]
+context = df['answers'].iloc[0:1]
 st.dataframe(df)
 #prompt enginee
 engineered_prompt = f"""
