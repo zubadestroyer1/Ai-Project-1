@@ -44,14 +44,14 @@ def calculate_cosine_similarity(sentence1: str, sentence2: str) -> float:
 
     return similarity
 
-df = pd.read_csv("question_answer_data_set_list.csv")
-df['similarity'] = df.apply(lambda x: calculate_cosine_similarity(x['question'], user_question), axis = 1)
-df = df.sort_values(by='similarity', ascending=False)
 context = df['answers'].iloc[0:3]
 st.dataframe(df)
 
 # FRONTEND
 user_question = st.text_input('Enter a question:', 'Ask a question about pink river dolphins.')
+df = pd.read_csv("question_answer_data_set_list.csv")
+df['similarity'] = df.apply(lambda x: calculate_cosine_similarity(x['question'], user_question), axis = 1)
+df = df.sort_values(by='similarity', ascending=False)
 #prompt enginee
 engineered_prompt = f"""
     Based on the context: {context}, answer the following question: {user_quesstion} with correct grammar and sentence structure.
