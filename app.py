@@ -44,7 +44,7 @@ def calculate_cosine_similarity(sentence1: str, sentence2: str) -> float:
 
     return similarity
 
-df = pd.read_csv("question_answer_data_set_list.csv.csv")
+df = pd.read_csv("question_answer_data_set_list.csv")
 df['similarity'] = df.apply(lambda x: calculate_cosine_similarity(x['question'], user_question), axis = 1)
 df = df.sort_values(by='similarity', ascending=False)
 context = df['answers'].iloc[0:3]
