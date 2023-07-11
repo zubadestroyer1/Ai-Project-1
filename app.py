@@ -110,4 +110,4 @@ engineered_prompt = f"""
 """
 
 answer = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
-st.write('Answer', answer)
+st.write('Answer:  ', answer)
