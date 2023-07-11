@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as palm
 import numpy as np
+import openai
 
 from scipy.spatial.distance import cosine
 
@@ -74,6 +75,7 @@ def calculate_sts_palm_score(sentence1: str, sentence2: str, key: str) -> float:
     return similarity_score
 
 SERPAPI_API_KEY = st.secrets["SERPAPI_API_KEY"]
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def call_langchain(prompt: str) -> str:
     llm = OpenAI(temperature=0)
