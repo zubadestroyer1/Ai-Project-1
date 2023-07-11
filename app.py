@@ -92,11 +92,20 @@ user_question = st.text_input('Enter a question:', 'Ask a question about pink ri
 df = pd.read_csv("question_answer_data_set_list.csv")
 df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], user_question, palm_api_key), axis = 1)
 df = df.sort_values(by='similarity', ascending=False)
-context = df['answers'].iloc[0:1]
+context = df['answers'].iloc[0:3]
 st.dataframe(df)
+
+#Langchain agent for google search
+langchain_search_prompt = f"""
+    search information about the key words in or questions in {user_question}.
+"""
+
+langchain_response = call_langchain(langchain_search_prompt)
+
 #prompt enginee
 engineered_prompt = f"""
-    Based on the context: {context}, answer the following question: {user_question} with correct grammar and sentence structure.
+    Based on the context: {context}, additonally based on this context from the internet: {langchain_response}, answer the following question: {user_question} with correct grammar, sentence structure, and substantial details.
 """
+
 answer = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
 st.write('Answer', answer)
