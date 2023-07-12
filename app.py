@@ -13,7 +13,7 @@ from langchain.llms import OpenAI
 
 # BACKEND
 palm_api_key = st.secrets["PALM_API_KEY"]
-df = pd.read_csv("question_answer_data_set.csv")
+df = pd.read_csv("question_answer_data_set_list.csv")
 
 st.sidebar.title("Sidebar")
 model = st.sidebar.selectbox(
