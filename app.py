@@ -131,38 +131,12 @@ if prompt := st.chat_input("Enter key words here."):
 
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-
-    search_results = internet_search(prompt)
-    context = search_results["context"]
-    urls = search_results["urls"]
-    processed_user_question = f"""
-        Here is a url: {urls}
-        Here is user question or keywords: {prompt}
-        Here is some text extracted from the webpage by bs4:
-        ---------
-        {context}
-        ---------
-
-        Web pages can have a lot of useless junk in them. 
-        For example, there might be a lot of ads, or a 
-        lot of navigation links, or a lot of text that 
-        is not relevant to the topic of the page. We want 
-        to extract only the useful information from the text.
-
-        You can use the url and title to help you understand 
-        the context of the text.
-        Please extract only the useful information from the text. 
-        Try not to rewrite the text, but instead extract 
-        only the useful information from the text.
-
-        Make sure to return URls as list of citations.
-    """
-
+    
     # FRONTEND
     df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], prompt, palm_api_key), axis = 1)
     df = df.sort_values(by='similarity', ascending=False)
     context = df['answers'].iloc[0:3]
-    st.dataframe(df)
+    #st.dataframe(df)
     
     #Langchain agent for google search
     langchain_search_prompt = f"""
@@ -176,7 +150,7 @@ if prompt := st.chat_input("Enter key words here."):
         Based on the context: {context}, additonally based on this context from the internet: {langchain_response}, answer the following question: {user_question} with correct grammar, sentence structure, and substantial details.
     """
         
-    answer = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
+    response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
