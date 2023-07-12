@@ -137,6 +137,7 @@ if prompt := st.chat_input("Enter key words here."):
     df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], prompt, palm_api_key), axis = 1)
     df = df.sort_values(by='similarity', ascending=False)
     context = df['answers'].iloc[0:3]
+    top_sim_score = df['similarity'][0]
     #st.dataframe(df)
     
     #Langchain agent for google search
@@ -148,7 +149,9 @@ if prompt := st.chat_input("Enter key words here."):
     
     #prompt enginee
     engineered_prompt = f"""
-        Based on the context: {context}, additonally based on this context from the internet: {langchain_response},
+        Based on the context: {context} with similarity score: {top_sim_score},
+        additonally based on this context from the internet: {langchain_response},
+        if that similarity score is higher than 0.85 then base most of the answer off of context and not internet context,
         answer the following question: {prompt} with correct grammar,
         sentence structure, and substantial details.
     """
