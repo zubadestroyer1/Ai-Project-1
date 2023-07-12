@@ -14,7 +14,7 @@ from langchain.llms import OpenAI
 # BACKEND
 palm_api_key = st.secrets["PALM_API_KEY"]
 
-t.sidebar.title("Sidebar")
+st.sidebar.title("Sidebar")
 model = st.sidebar.selectbox(
     "Choose which language model do you want to use:",
     ("Palm")
