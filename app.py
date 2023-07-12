@@ -141,14 +141,16 @@ if prompt := st.chat_input("Enter key words here."):
     
     #Langchain agent for google search
     langchain_search_prompt = f"""
-        search information about the key words in or questions in {user_question}.
+        search information about the key words in or questions in {prompt}.
     """
     
     langchain_response = call_langchain(langchain_search_prompt)
     
     #prompt enginee
     engineered_prompt = f"""
-        Based on the context: {context}, additonally based on this context from the internet: {langchain_response}, answer the following question: {user_question} with correct grammar, sentence structure, and substantial details.
+        Based on the context: {context}, additonally based on this context from the internet: {langchain_response},
+        answer the following question: {prompt} with correct grammar,
+        sentence structure, and substantial details.
     """
         
     response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
