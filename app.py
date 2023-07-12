@@ -23,7 +23,7 @@ domain = st.sidebar.selectbox(
     "Choose which domain you want to search:", ("Text")
 )
 counter_placeholder = st.sidebar.empty()
-counter_placeholder.write(f"Next item ... ")w
+counter_placeholder.write(f"Next item ... ")
 clear_button = st.sidebar.button("Clear Conversation", key="clear")
 
 def call_palm(prompt: str, palm_api_key: str) -> str:
