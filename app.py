@@ -14,6 +14,18 @@ from langchain.llms import OpenAI
 # BACKEND
 palm_api_key = st.secrets["PALM_API_KEY"]
 
+t.sidebar.title("Sidebar")
+model = st.sidebar.selectbox(
+    "Choose which language model do you want to use:",
+    ("Palm")
+)
+domain = st.sidebar.selectbox(
+    "Choose which domain you want to search:", ("Text")
+)
+counter_placeholder = st.sidebar.empty()
+counter_placeholder.write(f"Next item ... ")w
+clear_button = st.sidebar.button("Clear Conversation", key="clear")
+
 def call_palm(prompt: str, palm_api_key: str) -> str:
     palm.configure(api_key=palm_api_key)
     completion = palm.generate_text(
@@ -190,6 +202,12 @@ if prompt := st.chat_input("Enter key words here."):
             response = call_palm(f"{processed_user_question}")
         else:
             response = call_chatgpt(f"{processed_user_question}")
+
+    # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    # Add assistant response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": response})
     
 # FRONTEND
 user_question = st.text_input('Enter a question:', 'Ask a question about pink river dolphins.')
