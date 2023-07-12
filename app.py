@@ -210,9 +210,7 @@ if prompt := st.chat_input("Enter key words here."):
     st.session_state.messages.append({"role": "assistant", "content": response})
     
 # FRONTEND
-user_question = st.text_input('Enter a question:', 'Ask a question about pink river dolphins.')
-df = pd.read_csv("question_answer_data_set_list.csv")
-df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], user_question, palm_api_key), axis = 1)
+df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], prompt, palm_api_key), axis = 1)
 df = df.sort_values(by='similarity', ascending=False)
 context = df['answers'].iloc[0:3]
 st.dataframe(df)
@@ -230,4 +228,3 @@ engineered_prompt = f"""
 """
 
 answer = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
-st.write('Answer:  ', answer)
