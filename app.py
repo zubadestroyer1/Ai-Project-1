@@ -88,6 +88,108 @@ def call_langchain(prompt: str) -> str:
     output = agent.run(prompt)
 
     return output
+
+# reset everything
+if clear_button:
+    st.session_state["generated"] = []
+    st.session_state["past"] = []
+    st.session_state["messages"] = [
+        {"role": "system", "content": "You are a helpful assistant."}
+    ]
+    st.session_state["number_tokens"] = []
+    st.session_state["domain_name"] = []
+    counter_placeholder.write(f"Next item ...")
+
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+
+# React to user input
+if prompt := st.chat_input("Enter key words here."):
+    # Display user message in chat message container
+    st.chat_message("user").markdown(prompt)
+
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    # Get response
+    if domain == "Text":
+        if model in ["GPT", "Palm"]:
+            search_results = internet_search(prompt)
+            context = search_results["context"]
+            urls = search_results["urls"]
+            processed_user_question = f"""
+                Here is a url: {urls}
+                Here is user question or keywords: {prompt}
+                Here is some text extracted from the webpage by bs4:
+                ---------
+                {context[0:2]}
+                ---------
+
+                Web pages can have a lot of useless junk in them. 
+                For example, there might be a lot of ads, or a 
+                lot of navigation links, or a lot of text that 
+                is not relevant to the topic of the page. We want 
+                to extract only the useful information from the text.
+
+                You can use the url and title to help you understand 
+                the context of the text.
+                Please extract only the useful information from the text. 
+                Try not to rewrite the text, but instead extract 
+                only the useful information from the text.
+
+                Make sure to return URls as list of citations.
+            """
+        if model == "GPT":
+            response = call_chatgpt(f"{processed_user_question}")
+        elif model == "Palm":
+            response = call_palm(f"{processed_user_question}")
+        elif model == "Langchain Agent":
+            response = call_langchain(f"{prompt}")
+        else:
+            response = call_chatgpt(f"{processed_user_question}")
+    elif domain == "Video":
+        response = video_search(prompt)
+    else:
+        search_results = internet_search(prompt)
+        context = search_results["context"]
+        urls = search_results["urls"]
+        processed_user_question = f"""
+            Here is a url: {urls}
+            Here is user question or keywords: {prompt}
+            Here is some text extracted from the webpage by bs4:
+            ---------
+            {context}
+            ---------
+
+            Web pages can have a lot of useless junk in them. 
+            For example, there might be a lot of ads, or a 
+            lot of navigation links, or a lot of text that 
+            is not relevant to the topic of the page. We want 
+            to extract only the useful information from the text.
+
+            You can use the url and title to help you understand 
+            the context of the text.
+            Please extract only the useful information from the text. 
+            Try not to rewrite the text, but instead extract 
+            only the useful information from the text.
+
+            Make sure to return URls as list of citations.
+        """
+        if model == "GPT":
+            response = call_chatgpt(f"{processed_user_question}")
+        elif model == "Palm":
+            response = call_palm(f"{processed_user_question}")
+        else:
+            response = call_chatgpt(f"{processed_user_question}")
     
 # FRONTEND
 user_question = st.text_input('Enter a question:', 'Ask a question about pink river dolphins.')
