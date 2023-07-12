@@ -17,10 +17,10 @@ palm_api_key = st.secrets["PALM_API_KEY"]
 st.sidebar.title("Sidebar")
 model = st.sidebar.selectbox(
     "Choose which language model do you want to use:",
-    ("Palm")
+    ("Palm", "next")
 )
 domain = st.sidebar.selectbox(
-    "Choose which domain you want to search:", ("Text")
+    "Choose which domain you want to search:", ("Text", "next")
 )
 counter_placeholder = st.sidebar.empty()
 counter_placeholder.write(f"Next item ... ")
