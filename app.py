@@ -165,7 +165,7 @@ if prompt := st.chat_input("Enter key words here."):
         
     response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
 
-if Domain == "Image":
+if domain == "Image":
     st.markdown(
         """
         To learn more about image classification, please refer to this [notebook](https://github.com/yiqiao-yin/WYNAssociates/blob/main/docs/ref-deeplearning/ex02%20-%20ann%20and%20cnn.ipynb).
