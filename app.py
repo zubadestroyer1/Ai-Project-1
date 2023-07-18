@@ -21,7 +21,7 @@ model = st.sidebar.selectbox(
     ("Palm", "next")
 )
 domain = st.sidebar.selectbox(
-    "Choose which domain you want to search:", ("Text", "Image")
+    "Choose which domain you want to search:", ("Text", "Image", "next")
 )
 counter_placeholder = st.sidebar.empty()
 counter_placeholder.write(f"Next item ... ")
@@ -175,7 +175,7 @@ if Domain == "Image":
     )
     # Load model
     # !!! LOAD CORRECT MODEL ONCE COMPLETE !!!
-    new_model = tf.keras.models.load_model("models/toy_mnist_model.h5")
+    new_model = tf.keras.models.load_model("toy_mnist_model.h5")
     if new_model is not None:
         st.success("Load a neural network model successfully.")
 
