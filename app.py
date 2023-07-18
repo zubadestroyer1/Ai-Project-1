@@ -3,6 +3,7 @@ import pandas as pd
 import google.generativeai as palm
 import numpy as np
 import openai
+import tensorflow as tf
 
 from scipy.spatial.distance import cosine
 
