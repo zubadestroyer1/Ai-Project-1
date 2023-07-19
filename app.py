@@ -205,11 +205,10 @@ if domain == "Image":
         st.warning("Please upload a jpg/png file.")
     
     # Display assistant response in chat message container
-    if domain == "Text":
-        with st.chat_message("assistant"):
-            st.markdown(response)
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response})
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    # Add assistant response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": response})
     
  
     
