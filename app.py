@@ -126,48 +126,48 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-
-# React to user input
-if prompt := st.chat_input("Enter key words here."):
-    # Display user message in chat message container
-    st.chat_message("user").markdown(prompt)
-
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if domain == "Text":
+    # React to user input
+    if prompt := st.chat_input("Enter key words here."):
+        # Display user message in chat message container
+        st.chat_message("user").markdown(prompt)
     
-    # FRONTEND
-    df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], prompt, palm_api_key), axis = 1)
-    df = df.sort_values(by='similarity', ascending=False)
-    context = df['answers'].iloc[0:2]
-    top_sim_score = df['similarity'][0]
-    #st.dataframe(df)
-    
-    #Langchain agent for google search
-    langchain_search_prompt = f"""
-        search information about the key words in or questions in {prompt}.
-    """
-    
-    langchain_response = call_langchain(langchain_search_prompt)
-    
-    #prompt engineer
-    if top_sim_score > 0.85:
-        engineered_prompt = f"""
-            Based on the context: {context} with similarity score: {top_sim_score},
-            answer the following question: {prompt} with correct grammar,
-            sentence structure, and substantial details.
-        """
-    else:
-        engineered_prompt = f"""
-            Based on the context: {context} with similarity score: {top_sim_score},
-            additonally based on this context from the internet: {langchain_response},
-            if that similarity score is higher than 0.85 then base most of the answer off of context and not internet context,
-            answer the following question: {prompt} with correct grammar,
-            sentence structure, and substantial details.
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        # FRONTEND
+        df['similarity'] = df.apply(lambda x: calculate_sts_palm_score(x['question'], prompt, palm_api_key), axis = 1)
+        df = df.sort_values(by='similarity', ascending=False)
+        context = df['answers'].iloc[0:2]
+        top_sim_score = df['similarity'][0]
+        #st.dataframe(df)
+        
+        #Langchain agent for google search
+        langchain_search_prompt = f"""
+            search information about the key words in or questions in {prompt}.
         """
         
-    response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
+        langchain_response = call_langchain(langchain_search_prompt)
+        
+        #prompt engineer
+        if top_sim_score > 0.85:
+            engineered_prompt = f"""
+                Based on the context: {context} with similarity score: {top_sim_score},
+                answer the following question: {prompt} with correct grammar,
+                sentence structure, and substantial details.
+            """
+        else:
+            engineered_prompt = f"""
+                Based on the context: {context} with similarity score: {top_sim_score},
+                additonally based on this context from the internet: {langchain_response},
+                if that similarity score is higher than 0.85 then base most of the answer off of context and not internet context,
+                answer the following question: {prompt} with correct grammar,
+                sentence structure, and substantial details.
+            """
+            
+        response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
 
-if domain == "Image":
+elif domain == "Image":
     st.markdown(
         """
         To learn more about image classification, please refer to this [notebook](https://github.com/yiqiao-yin/WYNAssociates/blob/main/docs/ref-deeplearning/ex02%20-%20ann%20and%20cnn.ipynb).
