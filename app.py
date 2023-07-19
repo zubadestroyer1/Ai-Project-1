@@ -4,6 +4,7 @@ import google.generativeai as palm
 import numpy as np
 import openai
 import tensorflow as tf
+from PIL import Image
 
 from scipy.spatial.distance import cosine
 
