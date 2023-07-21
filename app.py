@@ -180,13 +180,6 @@ if domain == "Text":
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 elif domain == "Image":
-    st.markdown(
-        """
-        To learn more about image classification, please refer to this [notebook](https://github.com/yiqiao-yin/WYNAssociates/blob/main/docs/ref-deeplearning/ex02%20-%20ann%20and%20cnn.ipynb).
-
-        ⚠️⚠️⚠️To interact with the app, you'll need a picture. You can find a sample picture [here](https://github.com/yiqiao-yin/WYN-Vision/tree/main/pics).
-    """
-    )
     # Load model
     # !!! LOAD CORRECT MODEL ONCE COMPLETE !!!
     
@@ -194,9 +187,6 @@ elif domain == "Image":
     with custom_object_scope({"Patches": Patches, "PatchEncoder": PatchEncoder}):
         vit_model = tf.keras.models.load_model("vit_128_128.h5")
         st.success("Custom model loadded successfully!")
-    
-    if vit_model is not None:
-        st.success("Load a neural network model successfully.")
 
     # Load image
     uploaded_file = st.sidebar.file_uploader(
