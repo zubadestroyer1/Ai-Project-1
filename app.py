@@ -13,6 +13,11 @@ from langchain.agents import initialize_agent
 from langchain.agents import AgentType
 from langchain.llms import OpenAI
 
+from src.vision_model.vit import *
+from tensorflow import keras
+from tensorflow.keras import layers
+import tensorflow_addons as tfa
+
 # BACKEND
 palm_api_key = st.secrets["PALM_API_KEY"]
 df = pd.read_csv("question_answer_data_set_list.csv")
@@ -184,6 +189,7 @@ elif domain == "Image":
     )
     # Load model
     # !!! LOAD CORRECT MODEL ONCE COMPLETE !!!
+    
     custom_object_scope = tf.keras.saving.custom_object_scope
     with custom_object_scope({"Patches": Patches, "PatchEncoder": PatchEncoder}):
         vit_model = tf.keras.models.load_model("vit_128_128.h5")
