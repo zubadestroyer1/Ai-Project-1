@@ -184,8 +184,12 @@ elif domain == "Image":
     )
     # Load model
     # !!! LOAD CORRECT MODEL ONCE COMPLETE !!!
-    new_model = tf.keras.models.load_model("toy_mnist_model.h5")
-    if new_model is not None:
+    custom_object_scope = tf.keras.saving.custom_object_scope
+    with custom_object_scope({"Patches": Patches, "PatchEncoder": PatchEncoder}):
+        vit_model = tf.keras.models.load_model("vit_128_128.h5")
+        st.success("Custom model loadded successfully!")
+    
+    if vit_model is not None:
         st.success("Load a neural network model successfully.")
 
     # Load image
@@ -197,15 +201,15 @@ elif domain == "Image":
 
         # Convert to array
         # !!! CHANGE SIE OF IMAGE WITH MODEL ONCE COMPLETE !!!
-        w, h = 28, 28
+        w, h = 128, 128
         image = Image.open(uploaded_file)
         image = np.array(image)
         st.write(f"Dimension of the original image: {image.shape}")
-        image = np.resize(image, (w, h))
+        image = np.resize(image, (w, h, 3))
         st.write(f"Dimension of resized image: {image.shape}")
 
         # Inference
-        pred = new_model.predict(image.reshape((1, w, h)))
+        pred = vit_model.predict(image.reshape((1, w, h, 3)))
         label = np.argmax(pred, axis=1)
         st.write(f"Classification Result: {label}")
     else:
