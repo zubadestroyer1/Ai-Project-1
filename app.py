@@ -20,12 +20,13 @@ import tensorflow_addons as tfa
 
 # BACKEND
 palm_api_key = st.secrets["PALM_API_KEY"]
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 df = pd.read_csv("question_answer_data_set_list.csv")
 
 st.sidebar.title("Sidebar")
 model = st.sidebar.selectbox(
     "Choose which language model do you want to use:",
-    ("Palm", "next")
+    ("Palm", "ChatGPT")
 )
 domain = st.sidebar.selectbox(
     "Choose which domain you want to search:", ("Text", "Image", "next")
@@ -109,6 +110,35 @@ def call_langchain(prompt: str) -> str:
 
     return output
 
+def call_chatgpt(prompt: str) -> str:
+    """
+    Uses the OpenAI API to generate an AI response to a prompt.
+
+    Args:
+        prompt: A string representing the prompt to send to the OpenAI API.
+
+    Returns:
+        A string representing the AI's generated response.
+
+    """
+
+    # Use the OpenAI API to generate a response based on the input prompt.
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        temperature=0.3,
+        max_tokens=800,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0,
+    )
+
+    # Extract the text from the first (and only) choice in the response output.
+    ans = response.choices[0]["text"]
+
+    # Return the generated AI response.
+    return ans
+
 # reset everything
 if clear_button:
     st.session_state["generated"] = []
@@ -169,10 +199,12 @@ if domain == "Text":
                 answer the following question: {prompt} with correct grammar,
                 sentence structure, and substantial details.
             """
-            
-        response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
 
-        
+        if model == "Palm":
+            response = call_palm(prompt=engineered_prompt, palm_api_key=palm_api_key)
+        elif model == "ChatGPT":
+            response = call_chatgpt(prompt=engineered_prompt)
+            
         # Display assistant response in chat message container
         with st.chat_message("assistant"):
             st.markdown(response)
