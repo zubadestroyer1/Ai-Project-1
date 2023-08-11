@@ -21,7 +21,7 @@ import tensorflow_addons as tfa
 # BACKEND
 palm_api_key = st.secrets["PALM_API_KEY"]
 openai.api_key = st.secrets["OPENAI_API_KEY"]
-df = pd.read_csv("question_answer_data_set_list.csv")
+df = pd.read_csv("question_answer_eduardo.csv")
 
 st.sidebar.title("Sidebar")
 model = st.sidebar.selectbox(
