@@ -19,6 +19,14 @@ from tensorflow.keras import layers
 import tensorflow_addons as tfa
 
 # BACKEND
+st.set_page_config(page_title="BotanyView: Rainforest Chat", page_icon=":robot_face:")
+st.markdown(
+    f"""
+        <h1 style='text-align: center;'>BotanyView: Chat with the Rainforest</h1>
+    """,
+    unsafe_allow_html=True,
+)
+
 palm_api_key = st.secrets["PALM_API_KEY"]
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 df = pd.read_csv("question_answer_eduardo (2).csv")
@@ -34,14 +42,6 @@ domain = st.sidebar.selectbox(
 counter_placeholder = st.sidebar.empty()
 counter_placeholder.write(f"Next item ... ")
 clear_button = st.sidebar.button("Clear Conversation", key="clear")
-
-st.set_page_config(page_title="BotanyView: Rainforest Chat", page_icon=":robot_face:")
-st.markdown(
-    f"""
-        <h1 style='text-align: center;'>BotanyView: Chat with the Rainforest</h1>
-    """,
-    unsafe_allow_html=True,
-)
 
 def call_palm(prompt: str, palm_api_key: str) -> str:
     palm.configure(api_key=palm_api_key)
